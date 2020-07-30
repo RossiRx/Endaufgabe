@@ -1,13 +1,12 @@
 "use strict";
 var zauberbild;
 (function (zauberbild) {
-    class Moveable extends zauberbild.Symbol {
+    class Star extends zauberbild.Symbol {
         constructor(_position) {
             super(_position);
-            //console.log("Moveable Constructor");
-            this.velocity = new zauberbild.Vector(0, 0);
+            this.isGrowing = true;
         }
-        move(_timeslice) {
+        glow(_timeslice) {
             //console.log(" Move");
             let offset = new zauberbild.Vector(this.velocity.x, this.velocity.y); //Weg wird als neuer Velocity-Vektor definiert
             offset.scale(_timeslice); //Durch Scale-Funktion wird der der Vektor mit der Zeit multipliziert
@@ -25,6 +24,6 @@ var zauberbild;
             //console.log("Moveable draw");
         }
     }
-    zauberbild.Moveable = Moveable;
+    zauberbild.Star = Star;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassMoveables.js.map
+//# sourceMappingURL=Star.js.map

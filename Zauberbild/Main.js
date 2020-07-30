@@ -5,7 +5,6 @@ var zauberbild;
     let symbolArray = [];
     //let backgroundImage: ImageData;
     let selectedSymbol;
-    let selectedCanvasSymbol;
     let backgroundImage;
     function handleLoad() {
         console.log("init");
@@ -21,16 +20,31 @@ var zauberbild;
         button.addEventListener("click", chooseCircle);
         let button2 = document.getElementById("button2");
         button2.addEventListener("click", chooseSun);
+        let button3 = document.getElementById("button3");
+        button3.addEventListener("click", chooseVirus);
+        let button4 = document.getElementById("button4");
+        button4.addEventListener("click", chooseCloud);
+        let button5 = document.getElementById("button5");
+        button5.addEventListener("click", chooseStar);
         let deleteButton = document.getElementById("deleteButton");
         deleteButton.addEventListener("click", loadPicture);
         /* createParticles(150); */
-        /*  window.setInterval(update, 20); */
+        window.setInterval(update, 20);
     }
     function chooseCircle() {
         handleChoose(new zauberbild.Circle());
     }
+    function chooseVirus() {
+        handleChoose(new zauberbild.Virus());
+    }
     function chooseSun() {
         handleChoose(new zauberbild.Sun());
+    }
+    function chooseCloud() {
+        handleChoose(new zauberbild.Cloud());
+    }
+    function chooseStar() {
+        handleChoose(new zauberbild.Star());
     }
     function drawBackground1(_canvas) {
         //console.log("background");
@@ -105,11 +119,10 @@ var zauberbild;
             zauberbild.crc.putImageData(backgroundImage, 0, 0);
             selectedSymbol.setPosition(position.x, position.y);
             symbolArray.push(selectedSymbol);
-            selectedSymbol = null;
             loadPicture();
         }
         else {
-            for (let i = 0; symbolArray.length > i; i++) {
+            for (let i = symbolArray.length - 1; i >= 0; i--) {
                 if (symbolArray[i].isSelected(position)) {
                     console.log("is selected");
                     selectedSymbol = symbolArray[i];
@@ -131,6 +144,24 @@ var zauberbild;
         drawBackground1(canvas);
         for (let symbol of symbolArray) {
             symbol.draw();
+        }
+        if (selectedSymbol != null) {
+            selectedSymbol.draw();
+        }
+        selectedSymbol = null;
+    }
+    function update() {
+        zauberbild.crc.resetTransform();
+        let canvas = document.querySelector("canvas");
+        if (!canvas)
+            return;
+        zauberbild.crc = canvas.getContext("2d");
+        drawBackground1(canvas);
+        for (let symbol of symbolArray) {
+            symbol.draw();
+        }
+        if (selectedSymbol != null) {
+            selectedSymbol.draw();
         }
     }
     /*  function drawBackground2(_canvas: HTMLCanvasElement): void {

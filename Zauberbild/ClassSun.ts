@@ -15,7 +15,9 @@ namespace zauberbild {
 
 
         public draw(): void {
-
+            if (this.position.x == 0 && this.position.y == 0) {
+                return;
+            }
             //console.log("particle drawn" + this.position.x + this.position.y);
             let circlesPath: Path2D = new Path2D();
 

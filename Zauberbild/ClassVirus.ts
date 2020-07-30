@@ -1,11 +1,13 @@
 namespace zauberbild {
 
-    export class Particle extends Moveable {
+    export class Virus extends Moveable {
 
 
         public constructor(_position?: Vector) {
 
             super(_position);
+
+            this.size=30;
             
             //console.log("Particle Constructor");
 
@@ -17,13 +19,21 @@ namespace zauberbild {
 
         public draw(): void {
 
+            console.log("Draw Virus");
+            if (this.position.x == 0 && this.position.y == 0) {
+                return;
+            }
+         
+
+           this.move(1/400);
+
             //console.log("particle drawn" + this.position.x + this.position.y);
             let particlesPath: Path2D = new Path2D();
 
             crc.save();
             //crc.translate(this.position.x, this.position.y);
 
-            crc.fillStyle = "rgba(202, 183, 183, 0.1)";
+            crc.fillStyle = "rgba(202, 183, 183, 1)";
             particlesPath.arc(this.position.x, this.position.y, 35, 0, 2 * Math.PI);
 
             crc.fill(particlesPath);

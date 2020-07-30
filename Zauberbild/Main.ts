@@ -8,7 +8,6 @@ namespace zauberbild {
     //let backgroundImage: ImageData;
 
     let selectedSymbol: Symbol;
-    let selectedCanvasSymbol: Symbol;
     let backgroundImage: ImageData;
 
     function handleLoad(): void {
@@ -20,9 +19,6 @@ namespace zauberbild {
         if (!canvas)
             return;
         crc = <CanvasRenderingContext2D>canvas.getContext("2d");
-
-
-
 
 
         drawBackground1(canvas);
@@ -38,12 +34,23 @@ namespace zauberbild {
         let button2: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button2");
         button2.addEventListener("click", chooseSun);
 
+        let button3: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button3");
+        button3.addEventListener("click", chooseVirus);
+
+        let button4: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button4");
+        button4.addEventListener("click", chooseCloud);
+
+        let button5: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button5");
+        button5.addEventListener("click", chooseStar);
+
         let deleteButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
         deleteButton.addEventListener("click", loadPicture);
 
+
+
         /* createParticles(150); */
 
-        /*  window.setInterval(update, 20); */
+        window.setInterval(update, 20);
 
     }
 
@@ -51,8 +58,20 @@ namespace zauberbild {
         handleChoose(new Circle());
     }
 
+    function chooseVirus(): void {
+        handleChoose(new Virus());
+    }
+
     function chooseSun(): void {
         handleChoose(new Sun());
+    }
+
+    function chooseCloud(): void {
+        handleChoose(new Cloud());
+    }
+
+    function chooseStar(): void {
+        handleChoose(new Star());
     }
 
 
@@ -143,11 +162,10 @@ namespace zauberbild {
             crc.putImageData(backgroundImage, 0, 0);
             selectedSymbol.setPosition(position.x, position.y);
             symbolArray.push(selectedSymbol);
-            selectedSymbol = null;
             loadPicture();
         }
         else {
-            for (let i: number = 0; symbolArray.length > i; i++) {
+            for (let i: number = symbolArray.length - 1; i >= 0; i--) {
                 if (symbolArray[i].isSelected(position)) {
                     console.log("is selected");
                     selectedSymbol = symbolArray[i];
@@ -175,6 +193,31 @@ namespace zauberbild {
         for (let symbol of symbolArray) {
             symbol.draw();
         }
+        if (selectedSymbol != null) {
+            selectedSymbol.draw();
+        }
+
+        selectedSymbol = null;
+    }
+
+
+    function update(): void {
+        crc.resetTransform();
+        let canvas: HTMLCanvasElement | null = document.querySelector("canvas");
+        if (!canvas)
+            return;
+        crc = <CanvasRenderingContext2D>canvas.getContext("2d");
+
+        drawBackground1(canvas);
+
+        for (let symbol of symbolArray) {
+            symbol.draw();
+        }
+
+        if (selectedSymbol != null) {
+            selectedSymbol.draw();
+        }
+
     }
 
 

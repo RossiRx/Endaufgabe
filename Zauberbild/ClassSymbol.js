@@ -20,7 +20,6 @@ var zauberbild;
             return (Math.abs(difference.x) < this.size && Math.abs(difference.y) < this.size);
         }
         draw() {
-            //ghg
         }
     }
     zauberbild.Symbol = Symbol;

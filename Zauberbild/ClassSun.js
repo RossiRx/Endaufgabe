@@ -8,6 +8,9 @@ var zauberbild;
             console.log("Sun Constructor");
         }
         draw() {
+            if (this.position.x == 0 && this.position.y == 0) {
+                return;
+            }
             //console.log("particle drawn" + this.position.x + this.position.y);
             let circlesPath = new Path2D();
             zauberbild.crc.save();
