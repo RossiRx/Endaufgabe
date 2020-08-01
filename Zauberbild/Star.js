@@ -4,21 +4,40 @@ var zauberbild;
     class Star extends zauberbild.Symbol {
         constructor(_position) {
             super(_position);
+            this.outerRadius = 80;
+            this.outerRadiusMax = 100;
+            this.outerRadiusMin = 70;
+            this.innerRadius = 25;
+            this.innerRadiusMin = 10;
+            this.innerRadiusMax = 50;
             this.isGrowing = true;
         }
         glow(_timeslice) {
-            //console.log(" Move");
-            let offset = new zauberbild.Vector(this.velocity.x, this.velocity.y); //Weg wird als neuer Velocity-Vektor definiert
-            offset.scale(_timeslice); //Durch Scale-Funktion wird der der Vektor mit der Zeit multipliziert
-            this.position.add(offset); //Verschiebung in der Zeit wird auf die Position addiert  
-            if (this.position.x < 0) //Bedingungen für Verlassen des Canvas-Felds
-                this.position.x += zauberbild.crc.canvas.width;
-            if (this.position.y < 0)
-                this.position.y += zauberbild.crc.canvas.height;
-            if (this.position.x > zauberbild.crc.canvas.width)
-                this.position.x -= zauberbild.crc.canvas.width;
-            if (this.position.y > zauberbild.crc.canvas.height)
-                this.position.y -= zauberbild.crc.canvas.height;
+            /*  let offset: Vector = new Vector(this.velocity.x, this.velocity.y);  //Weg wird als neuer Velocity-Vektor definiert
+             offset.scale(_timeslice);                   //Durch Scale-Funktion wird der der Vektor mit der Zeit multipliziert
+             this.position.add(offset);                  //Verschiebung in der Zeit wird auf die Position addiert  */
+            //console.log("glow");
+            //console.log(this.innerRadius);
+            if (this.isGrowing) {
+                if (this.innerRadius < this.innerRadiusMax) {
+                    this.outerRadius++;
+                    this.innerRadius++;
+                    return;
+                }
+                else {
+                    this.isGrowing = false;
+                }
+            }
+            else {
+                if (this.innerRadius > this.innerRadiusMin) {
+                    this.outerRadius--;
+                    this.innerRadius--;
+                    return;
+                }
+                else {
+                    this.isGrowing = true;
+                }
+            }
         }
         draw() {
             //console.log("Moveable draw");

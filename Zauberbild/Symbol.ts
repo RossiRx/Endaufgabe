@@ -29,7 +29,7 @@ namespace zauberbild {
         }
 
         public draw(): void {
-    
+            //
         }
     }
 }

@@ -26,4 +26,4 @@ var zauberbild;
     }
     zauberbild.Vector = Vector;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassVector.js.map
+//# sourceMappingURL=Vector.js.map

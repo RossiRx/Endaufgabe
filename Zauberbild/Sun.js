@@ -24,4 +24,4 @@ var zauberbild;
     }
     zauberbild.Sun = Sun;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassSun.js.map
+//# sourceMappingURL=Sun.js.map

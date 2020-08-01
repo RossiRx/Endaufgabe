@@ -2,46 +2,19 @@
 var zauberbild;
 (function (zauberbild) {
     window.addEventListener("load", handleLoad);
-    let canvas;
     let symbolArray = [];
-    let crc1;
-    let crc2;
-    let crc3;
-    let crc4;
-    let backgroundImage;
-    let selectedBackground;
+    //let backgroundImage: ImageData;
     let selectedSymbol;
+    let backgroundImage;
     function handleLoad() {
         console.log("init");
-        canvas = document.querySelector("canvas");
+        let canvas = document.querySelector("canvas");
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
+        drawBackground1(canvas);
+        backgroundImage = zauberbild.crc.getImageData(0, 0, zauberbild.crc.canvas.width, zauberbild.crc.canvas.height);
         canvas.addEventListener("click", handlePlace);
-        let canvas1 = document.getElementById("canvas1");
-        if (!canvas1)
-            return;
-        crc1 = canvas1.getContext("2d");
-        drawBackground1(crc1);
-        canvas1.addEventListener("click", () => setBackground(1));
-        let canvas2 = document.getElementById("canvas2");
-        if (!canvas2)
-            return;
-        crc2 = canvas2.getContext("2d");
-        drawBackground2(crc2);
-        canvas2.addEventListener("click", () => setBackground(2));
-        let canvas3 = document.getElementById("canvas3");
-        if (!canvas3)
-            return;
-        crc3 = canvas3.getContext("2d");
-        drawBackground3(crc3);
-        canvas3.addEventListener("click", () => setBackground(3));
-        let canvas4 = document.getElementById("canvas4");
-        if (!canvas4)
-            return;
-        crc4 = canvas4.getContext("2d");
-        drawBackground4(canvas4, crc4);
-        canvas4.addEventListener("click", () => setBackground(4));
         //drawCloud({ x: 500, y: 125 }, { x: 100, y: 35 });
         let button = document.getElementById("button1");
         button.addEventListener("click", chooseCircle);
@@ -82,6 +55,16 @@ var zauberbild;
     }
     function chooseTriangle() {
         handleChoose(new zauberbild.Triangle());
+    }
+    function drawBackground1(_canvas) {
+        //console.log("background");
+        let gradient = zauberbild.crc.createLinearGradient(0, 0, 0, zauberbild.crc.canvas.height);
+        gradient.addColorStop(0, "rgb(150, 154, 204)");
+        gradient.addColorStop(0.6, "rgb(201, 203, 230)");
+        gradient.addColorStop(0.6, "rgb(27, 184, 48)");
+        gradient.addColorStop(0.8, "rgb(20, 99, 13)");
+        zauberbild.crc.fillStyle = gradient;
+        zauberbild.crc.fillRect(0, 0, zauberbild.crc.canvas.width, zauberbild.crc.canvas.height);
     }
     function handleChoose(_symbol) {
         selectedSymbol = _symbol;
@@ -142,15 +125,12 @@ var zauberbild;
         }
         crc.restore();
     } */
-    function setBackground(selectedBackgroudNumber) {
-        selectedBackground = selectedBackgroudNumber;
-    }
     function handlePlace(_event) {
         console.log(_event.clientX + "..." + zauberbild.crc.canvas.offsetLeft);
         console.log(_event.clientY + "....." + zauberbild.crc.canvas.offsetTop);
         let position = mapClientToCanvas(_event.clientX, _event.clientY);
         if (selectedSymbol) { //selectedSymbol darf nicht undefiend sein 
-            // crc.putImageData(backgroundImage, 0, 0);
+            zauberbild.crc.putImageData(backgroundImage, 0, 0);
             selectedSymbol.setPosition(position.x, position.y);
             symbolArray.push(selectedSymbol);
             loadPicture();
@@ -175,7 +155,7 @@ var zauberbild;
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
-        drawBackground();
+        drawBackground1(canvas);
         for (let symbol of symbolArray) {
             symbol.draw();
         }
@@ -190,7 +170,7 @@ var zauberbild;
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
-        drawBackground();
+        drawBackground1(canvas);
         for (let symbol of symbolArray) {
             symbol.draw();
         }
@@ -198,71 +178,55 @@ var zauberbild;
             selectedSymbol.draw();
         }
     }
-    function saveBackground(selectedCrc) {
-        console.log("auswählen");
-        //backgroundImage = selectedCrc.getImageData(0, 0,crc.canvas.width,crc.canvas.height);
-        loadPicture();
-        console.log("teeeeest");
-        console.log(backgroundImage);
-    }
-    function drawBackground() {
-        if (selectedBackground == 1) {
-            drawBackground1(zauberbild.crc);
-        }
-        if (selectedBackground == 2) {
-            drawBackground2(zauberbild.crc);
-        }
-        if (selectedBackground == 3) {
-            drawBackground3(zauberbild.crc);
-        }
-        if (selectedBackground == 4) {
-            drawBackground4(canvas, zauberbild.crc);
-        }
-    }
-    function drawBackground1(_crc) {
-        console.log("background1 draw");
-        let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
-        gradient.addColorStop(0, "rgb(150, 154, 204)");
-        gradient.addColorStop(0.6, "rgb(201, 203, 230)");
-        gradient.addColorStop(0.6, "rgb(27, 184, 48)");
-        gradient.addColorStop(0.8, "rgb(20, 99, 13)");
-        _crc.fillStyle = gradient;
-        _crc.fillRect(0, 0, _crc.canvas.width, _crc.canvas.height);
-    }
-    function drawBackground2(_crc) {
-        //console.log("background");
-        let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
-        gradient.addColorStop(0, "rgb(123, 59, 243)");
-        gradient.addColorStop(0.3, "rgb(49, 8, 124)");
-        gradient.addColorStop(0.8, "rgb(16, 10, 27)");
-        _crc.fillStyle = gradient;
-        _crc.fillRect(0, 0, _crc.canvas.width, _crc.canvas.height);
-    }
-    function drawBackground3(_crc) {
-        //console.log("background");
-        let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
-        gradient.addColorStop(0.2, "rgb(0, 0, 0)");
-        gradient.addColorStop(1, "rgb(177, 29, 19) ");
-        _crc.fillStyle = gradient;
-        _crc.fillRect(0, 0, _crc.canvas.width, _crc.canvas.height);
-    }
-    function drawBackground4(_canvas, _crc) {
-        let pattern = document.createElement("canvas").getContext("2d");
-        pattern.canvas.width = 40;
-        pattern.canvas.height = 20;
-        pattern.fillStyle = "rgb(86, 77, 163) ";
-        pattern.fillRect(0, 0, pattern.canvas.width, pattern.canvas.height);
-        pattern.moveTo(0, 10);
-        pattern.lineTo(10, 10);
-        pattern.lineTo(20, 0);
-        pattern.lineTo(30, 0);
-        pattern.lineTo(40, 10);
-        pattern.lineTo(30, 20);
-        pattern.lineTo(20, 20);
-        pattern.lineTo(10, 10);
-        pattern.stroke();
-        _crc.fillStyle = _crc.createPattern(pattern.canvas, "repeat");
-        _crc.fillRect(0, 0, _canvas.width, _canvas.height);
-    }
+    /*  function drawBackground2(_canvas: HTMLCanvasElement): void {
+         //console.log("background");
+         let gradient: CanvasGradient = crc.createLinearGradient(0, 0, 0, crc.canvas.height);
+         
+         gradient.addColorStop(0, "rgb(123, 59, 243)");
+         gradient.addColorStop(0.3, "rgb(49, 8, 124)");
+         gradient.addColorStop(0.8, "rgb(16, 10, 27)");
+ 
+         crc.fillStyle = gradient;
+         crc.fillRect(0, 0, crc.canvas.width, crc.canvas.height);
+         
+     }
+ 
+     function drawBackground3(_canvas: HTMLCanvasElement): void {
+         //console.log("background");
+         let gradient: CanvasGradient = crc.createLinearGradient(0, 0, 0, crc.canvas.height);
+         gradient.addColorStop(0.2, "rgb(0, 0, 0)");
+         gradient.addColorStop(1, "rgb(177, 29, 19) ");
+ 
+         crc.fillStyle = gradient;
+         crc.fillRect(0, 0, crc.canvas.width, crc.canvas.height);
+         
+     }
+ 
+ 
+     function drawBackground4(_canvas: HTMLCanvasElement): void {
+         
+         let pattern: CanvasRenderingContext2D = <CanvasRenderingContext2D>document.createElement("canvas").getContext("2d");
+         pattern.canvas.width = 40;
+         pattern.canvas.height = 20;
+         
+ 
+         pattern.fillStyle = "rgb(86, 77, 163) ";
+         pattern.fillRect(0, 0, pattern.canvas.width, pattern.canvas.height);
+         pattern.moveTo(0, 10);
+         pattern.lineTo(10, 10);
+         pattern.lineTo(20, 0);
+         pattern.lineTo(30, 0);
+         pattern.lineTo(40, 10);
+         pattern.lineTo(30, 20);
+         pattern.lineTo(20, 20);
+         pattern.lineTo(10, 10);
+         pattern.stroke();
+ 
+ 
+         crc.fillStyle = <CanvasPattern>crc.createPattern(pattern.canvas, "repeat");
+         crc.fillRect(0, 0, _canvas.width, _canvas.height);
+ 
+          
+     }  */
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=Main.js.map
+//# sourceMappingURL=Main copy.js.map

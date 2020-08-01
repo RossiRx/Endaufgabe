@@ -11,21 +11,21 @@ var zauberbild;
             this.velocity.random(100, 170); //Zufällige Geschwindigkeit mit angegebenem Min- und Maxwert
         }
         draw() {
-            console.log("Draw Virus");
+            //console.log("Draw Virus");
             if (this.position.x == 0 && this.position.y == 0) {
                 return;
             }
             this.move(1 / 400);
             //console.log("particle drawn" + this.position.x + this.position.y);
-            let particlesPath = new Path2D();
+            let virusPath = new Path2D();
             zauberbild.crc.save();
             //crc.translate(this.position.x, this.position.y);
             zauberbild.crc.fillStyle = "rgba(202, 183, 183, 1)";
-            particlesPath.arc(this.position.x, this.position.y, 35, 0, 2 * Math.PI);
-            zauberbild.crc.fill(particlesPath);
+            virusPath.arc(this.position.x, this.position.y, 35, 0, 2 * Math.PI);
+            zauberbild.crc.fill(virusPath);
             zauberbild.crc.restore();
         }
     }
     zauberbild.Virus = Virus;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassVirus.js.map
+//# sourceMappingURL=Virus.js.map

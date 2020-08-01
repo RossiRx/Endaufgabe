@@ -24,4 +24,4 @@ var zauberbild;
     }
     zauberbild.Circle = Circle;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassCircle.js.map
+//# sourceMappingURL=Circle.js.map

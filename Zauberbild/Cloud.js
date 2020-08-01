@@ -18,7 +18,7 @@ var zauberbild;
             this.drawCloud(this.position, new zauberbild.Vector(100, 35));
         }
         drawCloud(_position, _size) {
-            console.log("Cloud", _position, _size);
+            //console.log("Cloud", _position, _size);
             let nParticles = 15;
             let radiusParticle = 40;
             let particle = new Path2D();
@@ -43,4 +43,4 @@ var zauberbild;
     }
     zauberbild.Cloud = Cloud;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassCloud.js.map
+//# sourceMappingURL=Cloud.js.map

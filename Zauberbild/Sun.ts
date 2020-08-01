@@ -6,11 +6,11 @@ namespace zauberbild {
         public constructor(_position?: Vector) {
 
             super(_position);
-            this.size=40;
-            
+            this.size = 40;
+
             console.log("Sun Constructor");
 
-            
+
         }
 
 
@@ -23,10 +23,10 @@ namespace zauberbild {
 
             crc.save();
             //crc.translate(this.position.x, this.position.y);
-           
+
             crc.fillStyle = "rgba(255, 255, 0)";
             circlesPath.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI);
-             // void ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
+            // void ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
 
             crc.fill(circlesPath);
             crc.restore();

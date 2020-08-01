@@ -27,4 +27,4 @@ var zauberbild;
     }
     zauberbild.Moveable = Moveable;
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassMoveables.js.map
+//# sourceMappingURL=Moveables.js.map
