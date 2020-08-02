@@ -9,7 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node übung2/GenerateContent.js"
+    "start": "node Zauberbild/ZauberbildServer/Server.js"
   },
   "repository": {
     "type": "git",
