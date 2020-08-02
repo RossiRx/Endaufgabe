@@ -6,7 +6,7 @@ namespace zauberbild {
         public constructor(_position?: Vector) {
 
             super(_position);
-
+            this.name = "classicStar";
             this.size = 30;
 
             //console.log("Particle Constructor");

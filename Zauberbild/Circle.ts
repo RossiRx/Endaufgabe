@@ -7,6 +7,7 @@ namespace zauberbild {
 
             super(_position);
             this.size = 20;
+            this.name = "circle";
             console.log("Circle Constructor");
 
 

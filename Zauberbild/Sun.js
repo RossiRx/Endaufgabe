@@ -5,6 +5,7 @@ var zauberbild;
         constructor(_position) {
             super(_position);
             this.size = 40;
+            this.name = "sun";
             console.log("Sun Constructor");
         }
         draw() {

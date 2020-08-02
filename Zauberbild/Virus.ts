@@ -6,6 +6,7 @@ namespace zauberbild {
         public constructor(_position?: Vector) {
 
             super(_position);
+            this.name = "virus";
 
             this.size = 30;
 

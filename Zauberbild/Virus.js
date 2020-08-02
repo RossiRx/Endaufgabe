@@ -4,6 +4,7 @@ var zauberbild;
     class Virus extends zauberbild.Moveable {
         constructor(_position) {
             super(_position);
+            this.name = "virus";
             this.size = 30;
             //console.log("Particle Constructor");
             this.position = new zauberbild.Vector(0, 0);

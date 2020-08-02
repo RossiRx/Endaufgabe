@@ -4,6 +4,7 @@ namespace zauberbild {
 
         position: Vector;
         size: number;
+        name: string;
 
         public constructor(_position?: Vector) {
 

@@ -6,6 +6,7 @@ var zauberbild;
             super(_position);
             //console.log("Particle Constructor");
             this.size = 100;
+            this.name = "cloud";
             this.position = new zauberbild.Vector(0, 0);
             this.velocity = new zauberbild.Vector(0, 0);
             this.velocity.random(100, 170); //Zufällige Geschwindigkeit mit angegebenem Min- und Maxwert

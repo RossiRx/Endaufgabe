@@ -5,24 +5,39 @@ namespace zauberbild {
     export let crc: CanvasRenderingContext2D;
     let canvas: HTMLCanvasElement;
     let symbolArray: Symbol[] = [];
-    let crc1: CanvasRenderingContext2D;
-    let crc2: CanvasRenderingContext2D;
-    let crc3: CanvasRenderingContext2D;
-    let crc4: CanvasRenderingContext2D;
     let backgroundImage: ImageData;
     let selectedBackground: number;
-
     let selectedSymbol: Symbol;
+    let url: string = "http://localhost:5001";
+    // let savedPictures: Picture[] = [];
+    let pictureJson: string;
 
     function handleLoad(): void {
         console.log("init");
 
-        canvas = <HTMLCanvasElement>document.querySelector("canvas");
+        canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
             return;
         crc = <CanvasRenderingContext2D>canvas.getContext("2d");
         canvas.addEventListener("click", handlePlace);
+        if (!selectedBackground) {
+            selectedBackground = 1;
+        }
 
+
+        setBackgroundTools();
+        setSysmbolTools();
+
+        window.setInterval(update, 20);
+
+    }
+
+    function setBackgroundTools(): void {
+
+        let crc1: CanvasRenderingContext2D;
+        let crc2: CanvasRenderingContext2D;
+        let crc3: CanvasRenderingContext2D;
+        let crc4: CanvasRenderingContext2D;
 
         let canvas1: HTMLCanvasElement | null = <HTMLCanvasElement>document.getElementById("canvas1");
         if (!canvas1)
@@ -52,10 +67,8 @@ namespace zauberbild {
         drawBackground4(canvas4, crc4);
         canvas4.addEventListener("click", () => setBackground(4));
 
-
-
-
-        //drawCloud({ x: 500, y: 125 }, { x: 100, y: 35 });
+    }
+    function setSysmbolTools(): void {
 
         let button: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button1");
         button.addEventListener("click", chooseCircle);
@@ -82,13 +95,13 @@ namespace zauberbild {
         let deleteButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("deleteButton");
         deleteButton.addEventListener("click", loadPicture);
 
+        let saveButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("saveButton");
+        saveButton.addEventListener("click", savePicture);
 
-
-        /* createParticles(150); */
-
-        window.setInterval(update, 20);
-
+        let loadButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("loadButton");
+        loadButton.addEventListener("click", reloadPicture);
     }
+
 
     function chooseCircle(): void {
         handleChoose(new Circle());
@@ -217,7 +230,7 @@ namespace zauberbild {
 
     function loadPicture(): void {
         crc.resetTransform();
-        let canvas: HTMLCanvasElement | null = document.querySelector("canvas");
+        canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
             return;
         crc = <CanvasRenderingContext2D>canvas.getContext("2d");
@@ -237,13 +250,12 @@ namespace zauberbild {
 
     function update(): void {
         crc.resetTransform();
-        let canvas: HTMLCanvasElement | null = document.querySelector("canvas");
+        canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
             return;
         crc = <CanvasRenderingContext2D>canvas.getContext("2d");
 
         drawBackground();
-
 
         for (let symbol of symbolArray) {
             symbol.draw();
@@ -285,7 +297,6 @@ namespace zauberbild {
 
 
     function drawBackground1(_crc: CanvasRenderingContext2D): void {
-        console.log("background1 draw");
         let gradient: CanvasGradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
         gradient.addColorStop(0, "rgb(150, 154, 204)");
         gradient.addColorStop(0.6, "rgb(201, 203, 230)");
@@ -300,7 +311,6 @@ namespace zauberbild {
 
 
     function drawBackground2(_crc: CanvasRenderingContext2D): void {
-        //console.log("background");
         let gradient: CanvasGradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
 
         gradient.addColorStop(0, "rgb(123, 59, 243)");
@@ -313,7 +323,6 @@ namespace zauberbild {
     }
 
     function drawBackground3(_crc: CanvasRenderingContext2D): void {
-        //console.log("background");
         let gradient: CanvasGradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
         gradient.addColorStop(0.2, "rgb(0, 0, 0)");
         gradient.addColorStop(1, "rgb(177, 29, 19) ");
@@ -351,8 +360,68 @@ namespace zauberbild {
     }
 
 
+    function savePicture(): void {
+        let picture: Picture;
+        picture = new Picture();
+        picture.setName("teeeeeeestbild");
+        picture.setBackgroundNumber(selectedBackground);
+        picture.setSymbolArry(symbolArray);
 
+        pictureJson = JSON.stringify(picture);
+        console.log(pictureJson);
+        sendData(pictureJson);
 
+    }
+
+    function reloadPicture(): void {
+        console.log("reload");
+        let pictureParsed: Picture = new Picture();
+        pictureParsed = JSON.parse(pictureJson);
+
+        let picture: Picture = Object.assign(new Picture, pictureParsed);
+
+        selectedBackground = picture.getBackgroundNumber();
+        symbolArray = [];
+
+        for (let symbol of picture.getSymbolArray()) {
+            let symbolForArray: Symbol;
+            if (symbol.name == "sun") {
+                symbolForArray = Object.assign(new Sun, symbol);
+            }
+            else if (symbol.name == "circle") {
+                symbolForArray = Object.assign(new Circle, symbol);
+
+            }
+            else if (symbol.name == "virus") {
+                symbolForArray = Object.assign(new Virus, symbol);
+
+            }
+            else if (symbol.name == "cloud") {
+                symbolForArray = Object.assign(new Cloud, symbol);
+
+            }
+            else if (symbol.name == "classicStar") {
+                symbolForArray = Object.assign(new ClassicStar, symbol);
+
+            }
+            else if (symbol.name == "triangle") {
+                symbolForArray = Object.assign(new Triangle, symbol);
+
+            }
+            else {
+                continue;
+            }
+            symbolArray.push(symbolForArray);
+
+        }
+    }
+
+    async function sendData(json:string): Promise<void> {
+        console.log("Send order");
+        let response: Response = await fetch(url + "?" + json);
+        let responseText: string = await response.text();
+        alert(responseText);
+    }
 
 
 

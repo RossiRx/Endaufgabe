@@ -7,6 +7,7 @@ namespace zauberbild {
 
             super(_position);
             this.size = 80;
+            this.name = "triangle";
             //console.log("Triangle Constructor");
 
 

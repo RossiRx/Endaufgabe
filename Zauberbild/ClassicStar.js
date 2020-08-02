@@ -4,6 +4,7 @@ var zauberbild;
     class ClassicStar extends zauberbild.Star {
         constructor(_position) {
             super(_position);
+            this.name = "classicStar";
             this.size = 30;
             //console.log("Particle Constructor");
             this.position = new zauberbild.Vector(0, 0);

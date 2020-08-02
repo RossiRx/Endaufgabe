@@ -5,6 +5,7 @@ var zauberbild;
         constructor(_position) {
             super(_position);
             this.size = 20;
+            this.name = "circle";
             console.log("Circle Constructor");
         }
         draw() {

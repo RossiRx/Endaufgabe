@@ -9,6 +9,7 @@ namespace zauberbild {
 
             //console.log("Particle Constructor");
             this.size = 100;
+            this.name = "cloud";
 
             this.position = new Vector(0, 0);
             this.velocity = new Vector(0, 0);

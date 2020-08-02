@@ -4,20 +4,31 @@ var zauberbild;
     window.addEventListener("load", handleLoad);
     let canvas;
     let symbolArray = [];
-    let crc1;
-    let crc2;
-    let crc3;
-    let crc4;
     let backgroundImage;
     let selectedBackground;
     let selectedSymbol;
+    let url = "http://localhost:5001";
+    // let savedPictures: Picture[] = [];
+    let pictureJson;
     function handleLoad() {
         console.log("init");
-        canvas = document.querySelector("canvas");
+        canvas = document.getElementById("canvasMain");
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
         canvas.addEventListener("click", handlePlace);
+        if (!selectedBackground) {
+            selectedBackground = 1;
+        }
+        setBackgroundTools();
+        setSysmbolTools();
+        window.setInterval(update, 20);
+    }
+    function setBackgroundTools() {
+        let crc1;
+        let crc2;
+        let crc3;
+        let crc4;
         let canvas1 = document.getElementById("canvas1");
         if (!canvas1)
             return;
@@ -42,7 +53,8 @@ var zauberbild;
         crc4 = canvas4.getContext("2d");
         drawBackground4(canvas4, crc4);
         canvas4.addEventListener("click", () => setBackground(4));
-        //drawCloud({ x: 500, y: 125 }, { x: 100, y: 35 });
+    }
+    function setSysmbolTools() {
         let button = document.getElementById("button1");
         button.addEventListener("click", chooseCircle);
         let button2 = document.getElementById("button2");
@@ -59,8 +71,10 @@ var zauberbild;
         button7.addEventListener("click", chooseTriangle);
         let deleteButton = document.getElementById("deleteButton");
         deleteButton.addEventListener("click", loadPicture);
-        /* createParticles(150); */
-        window.setInterval(update, 20);
+        let saveButton = document.getElementById("saveButton");
+        saveButton.addEventListener("click", savePicture);
+        let loadButton = document.getElementById("loadButton");
+        loadButton.addEventListener("click", reloadPicture);
     }
     function chooseCircle() {
         handleChoose(new zauberbild.Circle());
@@ -171,7 +185,7 @@ var zauberbild;
     }
     function loadPicture() {
         zauberbild.crc.resetTransform();
-        let canvas = document.querySelector("canvas");
+        canvas = document.getElementById("canvasMain");
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
@@ -186,7 +200,7 @@ var zauberbild;
     }
     function update() {
         zauberbild.crc.resetTransform();
-        let canvas = document.querySelector("canvas");
+        canvas = document.getElementById("canvasMain");
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
@@ -220,7 +234,6 @@ var zauberbild;
         }
     }
     function drawBackground1(_crc) {
-        console.log("background1 draw");
         let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
         gradient.addColorStop(0, "rgb(150, 154, 204)");
         gradient.addColorStop(0.6, "rgb(201, 203, 230)");
@@ -230,7 +243,6 @@ var zauberbild;
         _crc.fillRect(0, 0, _crc.canvas.width, _crc.canvas.height);
     }
     function drawBackground2(_crc) {
-        //console.log("background");
         let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
         gradient.addColorStop(0, "rgb(123, 59, 243)");
         gradient.addColorStop(0.3, "rgb(49, 8, 124)");
@@ -239,7 +251,6 @@ var zauberbild;
         _crc.fillRect(0, 0, _crc.canvas.width, _crc.canvas.height);
     }
     function drawBackground3(_crc) {
-        //console.log("background");
         let gradient = _crc.createLinearGradient(0, 0, 0, _crc.canvas.height);
         gradient.addColorStop(0.2, "rgb(0, 0, 0)");
         gradient.addColorStop(1, "rgb(177, 29, 19) ");
@@ -263,6 +274,55 @@ var zauberbild;
         pattern.stroke();
         _crc.fillStyle = _crc.createPattern(pattern.canvas, "repeat");
         _crc.fillRect(0, 0, _canvas.width, _canvas.height);
+    }
+    function savePicture() {
+        let picture;
+        picture = new zauberbild.Picture();
+        picture.setName("teeeeeeestbild");
+        picture.setBackgroundNumber(selectedBackground);
+        picture.setSymbolArry(symbolArray);
+        pictureJson = JSON.stringify(picture);
+        console.log(pictureJson);
+        sendData(pictureJson);
+    }
+    function reloadPicture() {
+        console.log("reload");
+        let pictureParsed = new zauberbild.Picture();
+        pictureParsed = JSON.parse(pictureJson);
+        let picture = Object.assign(new zauberbild.Picture, pictureParsed);
+        selectedBackground = picture.getBackgroundNumber();
+        symbolArray = [];
+        for (let symbol of picture.getSymbolArray()) {
+            let symbolForArray;
+            if (symbol.name == "sun") {
+                symbolForArray = Object.assign(new zauberbild.Sun, symbol);
+            }
+            else if (symbol.name == "circle") {
+                symbolForArray = Object.assign(new zauberbild.Circle, symbol);
+            }
+            else if (symbol.name == "virus") {
+                symbolForArray = Object.assign(new zauberbild.Virus, symbol);
+            }
+            else if (symbol.name == "cloud") {
+                symbolForArray = Object.assign(new zauberbild.Cloud, symbol);
+            }
+            else if (symbol.name == "classicStar") {
+                symbolForArray = Object.assign(new zauberbild.ClassicStar, symbol);
+            }
+            else if (symbol.name == "triangle") {
+                symbolForArray = Object.assign(new zauberbild.Triangle, symbol);
+            }
+            else {
+                continue;
+            }
+            symbolArray.push(symbolForArray);
+        }
+    }
+    async function sendData(json) {
+        console.log("Send order");
+        let response = await fetch(url + "?" + json);
+        let responseText = await response.text();
+        alert(responseText);
     }
 })(zauberbild || (zauberbild = {}));
 //# sourceMappingURL=Main.js.map
