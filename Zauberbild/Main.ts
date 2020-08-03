@@ -16,7 +16,7 @@ namespace zauberbild {
     let selectedBackground: number;
     let selectedSymbol: Symbol;
     let pictureName: string;
-    let url: string = "https://zauberbildrossi.herokuapp.com/:13644";
+    let url: string = "https://zauberbildrossi.herokuapp.com/";
     //let url: string = "http://localhost:5001";
     // let savedPictures: Picture[] = [];
     let pictureJson: string;

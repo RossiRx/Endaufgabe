@@ -9,7 +9,7 @@ var zauberbild;
     let selectedBackground;
     let selectedSymbol;
     let pictureName;
-    let url = "https://zauberbildrossi.herokuapp.com/:13644";
+    let url = "https://zauberbildrossi.herokuapp.com/";
     //let url: string = "http://localhost:5001";
     // let savedPictures: Picture[] = [];
     let pictureJson;
