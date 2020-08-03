@@ -1,17 +1,17 @@
 "use strict";
 var zauberbild;
 (function (zauberbild) {
-    class ClassicStar extends zauberbild.Star {
+    class BigStar extends zauberbild.Star {
         constructor(_position) {
             super(_position);
-            this.name = "classicStar";
-            this.size = 25;
-            this.outerRadius = 20;
-            /*       this.outerRadiusMax = 20;
-                  this.outerRadiusMin = 11; */
-            this.innerRadius = 5;
-            this.innerRadiusMin = 3;
-            this.innerRadiusMax = 10;
+            this.name = "bigStar";
+            this.size = 65;
+            this.outerRadius = 50;
+            /*            this.outerRadiusMax = 100;
+                       this.outerRadiusMin = 70; */
+            this.innerRadius = 15;
+            this.innerRadiusMin = 10;
+            this.innerRadiusMax = 30;
             //console.log("Particle Constructor");
             this.position = new zauberbild.Vector(0, 0);
             /*  this.velocity = new Vector(0, 0);
@@ -27,7 +27,7 @@ var zauberbild;
             var rot = Math.PI / 2 * 3;
             var cx = this.position.x;
             var cy = this.position.y;
-            var spikes = 5;
+            var spikes = 7;
             //this.outerRadius = 30;
             //this.innerRadius = 15;
             var x = cx;
@@ -56,10 +56,10 @@ var zauberbild;
             zauberbild.crc.restore();
         }
     }
-    zauberbild.ClassicStar = ClassicStar;
+    zauberbild.BigStar = BigStar;
     /*    drawStar(75, 100, 5, 30, 15);
        drawStar(175, 100, 12, 30, 10);
        drawStar(75, 200, 6, 30, 15);
        drawStar(175, 200, 20, 30, 25); */
 })(zauberbild || (zauberbild = {}));
-//# sourceMappingURL=ClassicStar.js.map
+//# sourceMappingURL=BigStar.js.map

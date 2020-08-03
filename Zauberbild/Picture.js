@@ -4,6 +4,7 @@ var zauberbild;
     class Picture {
         constructor() {
             this.symbolArray = [];
+            //
         }
         getName() {
             return this.name;

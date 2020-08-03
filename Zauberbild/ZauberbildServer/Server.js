@@ -28,12 +28,11 @@ var zauberbild;
         console.log("Database connection ", pictures != undefined);
     }
     async function handleRequest(_request, _response) {
-        console.log("What's up?");
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
         if (_request.url) {
             let url = Url.parse(_request.url, true);
-            let urlParts = _request.url.split('&');
+            let urlParts = _request.url.split("&");
             if (urlParts[0] == "/?save") {
                 for (let key in url.query) {
                     console.log("key---->" + key);
@@ -43,8 +42,6 @@ var zauberbild;
                         storePicture(JSON.parse(jsonObj));
                     }
                 }
-                //console.log(urlParts[1]);
-                // storePicture(url.query[key]);
                 _response.write("save");
                 _response.end(); //nach jedem write ==> nicht am Ende, sonst wird eventuelle end() aufgerufen bevor write() fertig ist
             }
@@ -64,11 +61,11 @@ var zauberbild;
             }
         }
     }
-    function storePicture(_picture) {
+    async function storePicture(_picture) {
         console.log("Store picture..." + _picture);
         console.log("picture: " + _picture.name);
-        pictures.deleteOne({ name: _picture.name });
-        pictures.insert(_picture);
+        await pictures.deleteOne({ name: _picture.name });
+        await pictures.insert(_picture);
     }
     async function loadPictures() {
         let cursor = await pictures.find();

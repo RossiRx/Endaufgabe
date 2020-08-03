@@ -3,12 +3,12 @@ namespace zauberbild {
     export class Star extends Symbol {
 
         public position: Vector;
-        public outerRadius: number = 80;
-        public outerRadiusMax: number = 100;
-        public outerRadiusMin: number = 70;
-        public innerRadius: number = 25;
-        public innerRadiusMin: number = 10;
-        public innerRadiusMax: number = 50;
+        public outerRadius: number;
+/*         public outerRadiusMax: number;
+        public outerRadiusMin: number; */
+        public innerRadius: number;
+        public innerRadiusMin: number;
+        public innerRadiusMax: number;
 
         public isGrowing: boolean;
 

@@ -1,19 +1,19 @@
 namespace zauberbild {
 
-    export class ClassicStar extends Star {
+    export class BigStar extends Star {
 
 
         public constructor(_position?: Vector) {
 
             super(_position);
-            this.name = "classicStar";
-            this.size = 25;
-            this.outerRadius = 20;
-      /*       this.outerRadiusMax = 20;
-            this.outerRadiusMin = 11; */
-            this.innerRadius = 5;
-            this.innerRadiusMin = 3;
-            this.innerRadiusMax = 10;
+            this.name = "bigStar";
+            this.size = 65;
+             this.outerRadius = 50;
+  /*            this.outerRadiusMax = 100;
+             this.outerRadiusMin = 70; */
+             this.innerRadius = 15;
+             this.innerRadiusMin = 10;
+             this.innerRadiusMax = 30;
 
             //console.log("Particle Constructor");
 
@@ -43,7 +43,7 @@ namespace zauberbild {
             var rot: number = Math.PI / 2 * 3;
             var cx: number = this.position.x;
             var cy: number = this.position.y;
-            var spikes: number = 5;
+            var spikes: number = 7;
             //this.outerRadius = 30;
             //this.innerRadius = 15;
             var x: number = cx;

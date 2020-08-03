@@ -12,10 +12,11 @@
     <script src="Circle.js"></script>
     <script src="Sun.js"></script>
     <script src="Moveables.js"></script>
-    <script src="Virus.js"></script>
+    <script src="Ball.js"></script>
     <script src="Cloud.js"></script>
     <script src="Star.js"></script>
     <script src="ClassicStar.js"></script>
+    <script src="BigStar.js"></script>
     <script src="Dyeable.js"></script>
     <script src="Moon.js"></script>
     <script src="Triangle.js"></script>
@@ -27,37 +28,70 @@
 <body>
     <div class="wrapper">
 
-    <h1>ZAUBERBILD</h1>
 
-    <canvas id="canvasMain" width="600" height="400"> </canvas>
-    <canvas id="canvas1" width="70" height="50"> </canvas>
-    <canvas id="canvas2" width="70" height="50"> </canvas>
-    <canvas id="canvas3" width="70" height="50"> </canvas>
-    <canvas id="canvas4" width="70" height="50"> </canvas>
-    <button id="button1">circle</button>
-    <button id="button2">sun</button>
-    <button id="button3">virus</button>
-    <button id="button4">cloud</button>
-    <button id="button5">star</button>
-    <button id="moon">moon</button>
-    <button id="triangle">triangle</button>
 
-    <label>Picture Name: </label>
-    <input  type="text" id="nameInput"><input>
-    <label>Select Picture: </label>
-    <input type="text" id="pictureListInput" name="Datalist" list="options" placeholder="loadPicture" />
-    <datalist id="options">
-    </datalist>
-    <select></select>
-    <button id="newButton">clear</button>
-    <button id="deleteButton">delete</button>
-    <button id="saveButton">save</button>
-    <button id="loadButton">load</button>
+        <canvas id="canvasMain" width="600" height="400"> </canvas>
 
-</div>
-    
-    
-    
+
+
+
+        <div id="namePicture">
+            <label>Picture Name: </label>
+            <input type="text" id="nameInput"></input>
+        </div>
+
+        <div id="zeile2">
+            <div>Backgrounds</div>
+            <canvas id="canvas1" width="70" height="50"> </canvas>
+            <canvas id="canvas2" width="70" height="50"> </canvas>
+            <canvas id="canvas3" width="70" height="50"> </canvas>
+            <canvas id="canvas4" width="70" height="50"> </canvas>
+        </div>
+
+        <div id="zeile3">
+            <div>Non-Animated Symbols</div>
+            <button id="button1">circle</button>
+            <button id="button2">sun</button>
+            <button id="triangle">triangle</button>
+            <button id="deleteButton">delete</button>
+        </div>
+
+        <div id="zeile4">
+            <div>Animated Symbols</div>
+            <button id="button3">ball</button>
+            <button id="button4">cloud</button>
+            <button id="button5">tiny star</button>
+            <button id="button6">big star</button>
+        </div>
+
+
+        <div id="selectPicture">
+
+            <label>Select Picture: </label>
+            <input type="text" id="pictureListInput" name="Datalist" list="options" placeholder="loadPicture" />
+            <datalist id="options">
+            </datalist>
+            <button id="loadButton">load</button>
+            <button id="newButton">clear</button>
+        </div>
+
+        <div id="zeile6">
+            <button id="smallButton">small</button>
+            <button id="mediumButton">medium</button>
+            <button id="bigButton">big</button>
+        </div>
+
+
+
+        <button id="saveButton">save</button>
+
+
+
+
+    </div>
+
+
+
 
 </body>
 

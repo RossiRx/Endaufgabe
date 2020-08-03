@@ -8,7 +8,7 @@ namespace zauberbild {
             super(_position);
 
             //console.log("Particle Constructor");
-            this.size = 100;
+            this.size = 70;
             this.name = "cloud";
 
             this.position = new Vector(0, 0);
@@ -30,7 +30,7 @@ namespace zauberbild {
             //console.log("Cloud", _position, _size);
 
             let nParticles: number = 15;
-            let radiusParticle: number = 40;
+            let radiusParticle: number = 30;
             let particle: Path2D = new Path2D();
             let gradient: CanvasGradient = crc.createRadialGradient(0, 0, 0, 0, 0, radiusParticle);
 
@@ -44,10 +44,12 @@ namespace zauberbild {
 
             //TODO fixed particlepositions --> not random
 
+            let particlePositionsX: number[] = [0.3, 0.6, 0.9, 0.4, 0.66, 0.77, 0.95, 0.72, 0.44, 0.35, 0.62, 0.73, 0.87, 0.16, 0.45];
+            let particlePositionsY: number[] = [0.53, 0.56, 0.39, 0.54, 0.66, 0, 77, 0.22, 0.44, 0.65, 0.12, 0.23, 0.87, 0.56, 0.65, 0.47];
             for (let drawn: number = 0; drawn < nParticles; drawn++) {
                 crc.save();
-                let x: number = (Math.random() - 0.5) * _size.x;
-                let y: number = - (Math.random() * _size.y);
+                let x: number = (particlePositionsX[drawn]- 0.5) * _size.x;
+                let y: number = - (particlePositionsY[drawn] * _size.y);
                 crc.translate(x, y);
                 crc.fill(particle);
                 crc.restore();

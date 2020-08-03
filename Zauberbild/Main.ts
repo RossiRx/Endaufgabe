@@ -10,9 +10,11 @@ namespace zauberbild {
 
 
     export let crc: CanvasRenderingContext2D;
+    let inputField: HTMLInputElement;
     let canvas: HTMLCanvasElement;
+    let canvasWidth: number;
+    let canvasHeight: number;
     let symbolArray: Symbol[] = [];
-    let backgroundImage: ImageData;
     let selectedBackground: number;
     let selectedSymbol: Symbol;
     let pictureName: string;
@@ -32,7 +34,8 @@ namespace zauberbild {
 
     }
 
-    function renewPicture():void{
+    function renewPicture(): void {
+        setCanvasSize(600, 400);
         canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
             return;
@@ -42,6 +45,7 @@ namespace zauberbild {
             selectedBackground = 1;
         }
         symbolArray = [];
+        getDataFromServer();
     }
 
     function setBackgroundTools(): void {
@@ -89,7 +93,7 @@ namespace zauberbild {
         button2.addEventListener("click", chooseSun);
 
         let button3: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button3");
-        button3.addEventListener("click", chooseVirus);
+        button3.addEventListener("click", chooseBall);
 
         let button4: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button4");
         button4.addEventListener("click", chooseCloud);
@@ -97,8 +101,8 @@ namespace zauberbild {
         let button5: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button5");
         button5.addEventListener("click", chooseClassicStar);
 
-        let button6: HTMLButtonElement = <HTMLButtonElement>document.getElementById("moon");
-        button6.addEventListener("click", chooseMoon);
+        let button6: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button6");
+        button6.addEventListener("click", chooseBigStar);
 
         let button7: HTMLButtonElement = <HTMLButtonElement>document.getElementById("triangle");
         button7.addEventListener("click", chooseTriangle);
@@ -116,8 +120,17 @@ namespace zauberbild {
         let newButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("newButton");
         newButton.addEventListener("click", renewPicture);
 
+        let bigButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("bigButton");
+        bigButton.addEventListener("click", () => setCanvasSize(600, 400));
 
-        let inputField: HTMLInputElement = <HTMLInputElement>document.getElementById("nameInput");
+        let mediumButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("mediumButton");
+        mediumButton.addEventListener("click", () => setCanvasSize(550, 350));
+
+        let smallButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("smallButton");
+        smallButton.addEventListener("click", () => setCanvasSize(500, 300));
+
+
+        inputField = <HTMLInputElement>document.getElementById("nameInput");
         inputField.addEventListener("input", () => { pictureName = inputField.value; console.log(pictureName); });
 
         let dataList: HTMLInputElement = <HTMLInputElement>document.getElementById("pictureListInput");
@@ -134,8 +147,8 @@ namespace zauberbild {
         handleChoose(new Circle());
     }
 
-    function chooseVirus(): void {
-        handleChoose(new Virus());
+    function chooseBall(): void {
+        handleChoose(new Ball());
     }
 
     function chooseSun(): void {
@@ -150,79 +163,25 @@ namespace zauberbild {
         handleChoose(new ClassicStar());
     }
 
-    function chooseMoon(): void {
-        handleChoose(new Moon());
+    function chooseBigStar(): void {
+        handleChoose(new BigStar());
     }
-
 
     function chooseTriangle(): void {
         handleChoose(new Triangle());
     }
 
-    function handleChoose(_symbol: Symbol) {
+    function setCanvasSize(width: number, height: number): void {
+        canvasHeight = height;
+        canvasWidth = width;
+    }
+
+    function handleChoose(_symbol: Symbol): void {
         selectedSymbol = _symbol;
     }
 
-    /*  function createCircle(): void {
-         let circle: Circle;
-         circle = new Circle(new Vector(0, 0));
-         symbolArray.push(circle);
-         circle.draw();
-     }
-  */
-    /* function createParticles(_nParticles: number): void {
-        console.log("Create Particles");
-        for (let i: number = 0; i < _nParticles; i++) {
-            let particle: Particle = new Particle();
-            moveableArray.push(particle);
-        }
-    } */
 
-    /*    function update(): void {
-   
-           crc.putImageData(backgroundImage, 0, 0);
-   
-   
-       }
-   
-       for (let particle of moveableArray) {
-           particle.move(1 / 100);
-           particle.draw();
-   
-       }
-   
-   }
-   
-    */
-
-    /* function drawCloud(_position: Vector, _size: Vector): void {
-        console.log("Cloud", _position, _size);
-
-        let nParticles: number = 25;
-        let radiusParticle: number = 20;
-        let particle: Path2D = new Path2D();
-        let gradient: CanvasGradient = crc.createRadialGradient(0, 0, 0, 0, 0, radiusParticle);
-
-        particle.arc(0, 0, radiusParticle, 0, 2 * Math.PI);
-        gradient.addColorStop(0, "HSLA(0, 100%, 100%, 0.8)");
-        gradient.addColorStop(1, "HSLA(0, 100%, 100%, 0.1)");
-
-        crc.save();
-        crc.translate(_position.x, _position.y);
-        crc.fillStyle = gradient;
-
-        for (let drawn: number = 0; drawn < nParticles; drawn++) {
-            crc.save();
-            let x: number = (Math.random() - 0.5) * _size.x;
-            let y: number = - (Math.random() * _size.y);
-            crc.translate(x, y);
-            crc.fill(particle);
-            crc.restore();
-        }
-        crc.restore();
-    } */
-
-    function setBackground(selectedBackgroudNumber: number) {
+    function setBackground(selectedBackgroudNumber: number): void {
         selectedBackground = selectedBackgroudNumber;
     }
 
@@ -233,7 +192,6 @@ namespace zauberbild {
 
         if (selectedSymbol) {     //selectedSymbol darf nicht undefiend sein 
 
-            // crc.putImageData(backgroundImage, 0, 0);
             selectedSymbol.setPosition(position.x, position.y);
             symbolArray.push(selectedSymbol);
             loadPicture();
@@ -280,6 +238,8 @@ namespace zauberbild {
     function update(): void {
         crc.resetTransform();
         canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
         if (!canvas)
             return;
         crc = <CanvasRenderingContext2D>canvas.getContext("2d");
@@ -294,17 +254,6 @@ namespace zauberbild {
             selectedSymbol.draw();
         }
 
-    }
-
-
-
-    function saveBackground(selectedCrc: CanvasRenderingContext2D): void {
-        console.log("auswählen");
-        //backgroundImage = selectedCrc.getImageData(0, 0,crc.canvas.width,crc.canvas.height);
-        loadPicture();
-
-        console.log("teeeeest");
-        console.log(backgroundImage);
     }
 
     function drawBackground(): void {
@@ -403,27 +352,20 @@ namespace zauberbild {
         picture.setBackgroundNumber(selectedBackground);
         picture.setSymbolArry(symbolArray);
 
-        pictureJson = JSON.stringify(picture);
-        console.log(pictureJson);
-
-        var request: ServerRequest = {
-            name: picture.getName(),
-            picture: picture
-        }
-
-        sendData(request);
+        sendData(picture);
+        getDataFromServer();
 
     }
 
-    function parseAsPicture(json: any): Picture {
+    function parseAsPicture(json: string): Picture {
         console.log("parse");
-        let returnPicture:Picture = new Picture();
+        let returnPicture: Picture = new Picture();
         let pictureParsed: Picture = Object.assign(new Picture, json);
         console.log(pictureParsed.name);
 
         returnPicture.name = pictureParsed.name;
-        returnPicture.backgroundNumber=pictureParsed.backgroundNumber;
-        returnPicture.symbolArray=[];
+        returnPicture.backgroundNumber = pictureParsed.backgroundNumber;
+        returnPicture.symbolArray = [];
 
         for (let symbol of pictureParsed.symbolArray) {
             let symbolForArray: Symbol;
@@ -434,8 +376,8 @@ namespace zauberbild {
                 symbolForArray = Object.assign(new Circle, symbol);
 
             }
-            else if (symbol.name == "virus") {
-                symbolForArray = Object.assign(new Virus, symbol);
+            else if (symbol.name == "ball") {
+                symbolForArray = Object.assign(new Ball, symbol);
 
             }
             else if (symbol.name == "cloud") {
@@ -444,6 +386,9 @@ namespace zauberbild {
             }
             else if (symbol.name == "classicStar") {
                 symbolForArray = Object.assign(new ClassicStar, symbol);
+
+            } else if (symbol.name == "bigStar") {
+                symbolForArray = Object.assign(new BigStar, symbol);
 
             }
             else if (symbol.name == "triangle") {
@@ -459,63 +404,18 @@ namespace zauberbild {
         return returnPicture;
     }
 
-    function reloadPicture(): void {
-        console.log("reload");
-        let pictureParsed: Picture = new Picture();
-        pictureParsed = JSON.parse(pictureJson);
-
-        let picture: Picture = Object.assign(new Picture, pictureParsed);
-
-        selectedBackground = picture.getBackgroundNumber();
-        symbolArray = [];
-
-        for (let symbol of picture.getSymbolArray()) {
-            let symbolForArray: Symbol;
-            if (symbol.name == "sun") {
-                symbolForArray = Object.assign(new Sun, symbol);
-            }
-            else if (symbol.name == "circle") {
-                symbolForArray = Object.assign(new Circle, symbol);
-
-            }
-            else if (symbol.name == "virus") {
-                symbolForArray = Object.assign(new Virus, symbol);
-
-            }
-            else if (symbol.name == "cloud") {
-                symbolForArray = Object.assign(new Cloud, symbol);
-
-            }
-            else if (symbol.name == "classicStar") {
-                symbolForArray = Object.assign(new ClassicStar, symbol);
-
-            }
-            else if (symbol.name == "triangle") {
-                symbolForArray = Object.assign(new Triangle, symbol);
-
-            }
-            else {
-                continue;
-            }
-            symbolArray.push(symbolForArray);
-
-        }
-    }
-
-    async function sendData(request: ServerRequest): Promise<void> {
+    async function sendData(picture: Picture): Promise<void> {
         console.log("Send order");
-        let query: URLSearchParams = new URLSearchParams(JSON.stringify(request.picture));
-        let response: Response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(request.picture));
+        let response: Response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(picture));
         let responseText: string = "";
         responseText = await response.text();
         alert(responseText);
     }
 
-    async function getDataFromServer() {
+    async function getDataFromServer(): Promise<any> {
         console.log("get dataaaaaaaa");
         let response: Response = await fetch(url + "?load&");
         let responseText: string = await response.text();
-        alert(responseText);
         console.log("Resp: " + responseText);
         loadedPictures = [];
         let arrayFromDB: [] = [];
@@ -533,21 +433,13 @@ namespace zauberbild {
     }
 
     function fillList(): void {
-        var str = '';
+        let str: string = "";
         for (let picture of loadedPictures) {
             str += '<option "id="option' + picture.name + ' "value="' + picture.name + '" />'; // Storing options in variable
 
-
         }
-
-        var my_list = document.getElementById("options");
-        my_list.innerHTML = str;
-
-        /*for (let picture of loadedPictures) {
-            let option: HTMLDataListElement = <HTMLDataListElement>document.getElementById("option" + picture.name);
-            option.addEventListener("chlick", () => { console.log("clicked" + option.nodeValue); });
-        }*/
-
+        let list: HTMLElement = <HTMLElement>document.getElementById("options");
+        list.innerHTML = str;
     }
 
     function findPicture(name: string): Picture {
@@ -560,7 +452,7 @@ namespace zauberbild {
 
     }
 
-    function changePicture(name: string) {
+    function changePicture(name: string): void {
         let selectedPicture: Picture = findPicture(name);
         if (selectedPicture == null) {
             return;
@@ -568,16 +460,11 @@ namespace zauberbild {
 
         selectedBackground = selectedPicture.getBackgroundNumber();
         symbolArray = selectedPicture.getSymbolArray();
+        inputField.value = selectedPicture.name;
+
 
 
     }
-
-    /*async function sendData(picture: Picture): Promise<void> {
-        console.log("Send order");
-        let response: Response = await fetch(url + "?save&" + "name :"+picture.getName());
-        let responseText: string = await response.text();
-        alert(responseText);
-    }*/
 
 
 

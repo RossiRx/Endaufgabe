@@ -7,6 +7,7 @@ namespace zauberbild {
         public symbolArray: Symbol[] = [];
 
         public constructor() {
+            //
         }
 
         public getName(): string {
@@ -37,9 +38,9 @@ namespace zauberbild {
         }
 
         public setSymbolArry(symbolArray: Symbol[]): void {
-            for(let symbol of symbolArray){
+            for (let symbol of symbolArray) {
                 this.symbolArray.push(symbol);
-            }            
+            }
         }
     }
 }

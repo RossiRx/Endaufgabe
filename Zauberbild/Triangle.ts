@@ -6,7 +6,7 @@ namespace zauberbild {
         public constructor(_position?: Vector) {
 
             super(_position);
-            this.size = 80;
+            this.size = 50;
             this.name = "triangle";
             //console.log("Triangle Constructor");
 
@@ -19,19 +19,19 @@ namespace zauberbild {
                 return;
             }
             //console.log("particle drawn" + this.position.x + this.position.y);
-            
+
             let trianglePath: Path2D = new Path2D();
 
-        
-            
+
+
             crc.save();
             //trianglePath.beginPath();
-            trianglePath.moveTo(this.position.x, this.position.y-this.size);
-            trianglePath.lineTo(this.position.x-this.size, this.position.y+this.size);
-            trianglePath.lineTo(this.position.x+this.size, this.position.y+this.size);
+            trianglePath.moveTo(this.position.x, this.position.y - this.size);
+            trianglePath.lineTo(this.position.x - this.size, this.position.y + this.size);
+            trianglePath.lineTo(this.position.x + this.size, this.position.y + this.size);
             trianglePath.closePath();
 
-            
+
             crc.fillStyle = "grey";
             crc.fill(trianglePath);
             crc.restore();

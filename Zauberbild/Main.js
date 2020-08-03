@@ -3,9 +3,11 @@ var zauberbild;
 (function (zauberbild) {
     window.addEventListener("load", handleLoad);
     let loadedPictures;
+    let inputField;
     let canvas;
+    let canvasWidth;
+    let canvasHeight;
     let symbolArray = [];
-    let backgroundImage;
     let selectedBackground;
     let selectedSymbol;
     let pictureName;
@@ -21,6 +23,7 @@ var zauberbild;
         window.setInterval(update, 20);
     }
     function renewPicture() {
+        setCanvasSize(600, 400);
         canvas = document.getElementById("canvasMain");
         if (!canvas)
             return;
@@ -30,6 +33,7 @@ var zauberbild;
             selectedBackground = 1;
         }
         symbolArray = [];
+        getDataFromServer();
     }
     function setBackgroundTools() {
         let crc1;
@@ -67,13 +71,13 @@ var zauberbild;
         let button2 = document.getElementById("button2");
         button2.addEventListener("click", chooseSun);
         let button3 = document.getElementById("button3");
-        button3.addEventListener("click", chooseVirus);
+        button3.addEventListener("click", chooseBall);
         let button4 = document.getElementById("button4");
         button4.addEventListener("click", chooseCloud);
         let button5 = document.getElementById("button5");
         button5.addEventListener("click", chooseClassicStar);
-        let button6 = document.getElementById("moon");
-        button6.addEventListener("click", chooseMoon);
+        let button6 = document.getElementById("button6");
+        button6.addEventListener("click", chooseBigStar);
         let button7 = document.getElementById("triangle");
         button7.addEventListener("click", chooseTriangle);
         let deleteButton = document.getElementById("deleteButton");
@@ -84,7 +88,13 @@ var zauberbild;
         loadButton.addEventListener("click", getDataFromServer);
         let newButton = document.getElementById("newButton");
         newButton.addEventListener("click", renewPicture);
-        let inputField = document.getElementById("nameInput");
+        let bigButton = document.getElementById("bigButton");
+        bigButton.addEventListener("click", () => setCanvasSize(600, 400));
+        let mediumButton = document.getElementById("mediumButton");
+        mediumButton.addEventListener("click", () => setCanvasSize(550, 350));
+        let smallButton = document.getElementById("smallButton");
+        smallButton.addEventListener("click", () => setCanvasSize(500, 300));
+        inputField = document.getElementById("nameInput");
         inputField.addEventListener("input", () => { pictureName = inputField.value; console.log(pictureName); });
         let dataList = document.getElementById("pictureListInput");
         dataList.addEventListener("input", () => {
@@ -95,8 +105,8 @@ var zauberbild;
     function chooseCircle() {
         handleChoose(new zauberbild.Circle());
     }
-    function chooseVirus() {
-        handleChoose(new zauberbild.Virus());
+    function chooseBall() {
+        handleChoose(new zauberbild.Ball());
     }
     function chooseSun() {
         handleChoose(new zauberbild.Sun());
@@ -107,71 +117,19 @@ var zauberbild;
     function chooseClassicStar() {
         handleChoose(new zauberbild.ClassicStar());
     }
-    function chooseMoon() {
-        handleChoose(new zauberbild.Moon());
+    function chooseBigStar() {
+        handleChoose(new zauberbild.BigStar());
     }
     function chooseTriangle() {
         handleChoose(new zauberbild.Triangle());
     }
+    function setCanvasSize(width, height) {
+        canvasHeight = height;
+        canvasWidth = width;
+    }
     function handleChoose(_symbol) {
         selectedSymbol = _symbol;
     }
-    /*  function createCircle(): void {
-         let circle: Circle;
-         circle = new Circle(new Vector(0, 0));
-         symbolArray.push(circle);
-         circle.draw();
-     }
-  */
-    /* function createParticles(_nParticles: number): void {
-        console.log("Create Particles");
-        for (let i: number = 0; i < _nParticles; i++) {
-            let particle: Particle = new Particle();
-            moveableArray.push(particle);
-        }
-    } */
-    /*    function update(): void {
-   
-           crc.putImageData(backgroundImage, 0, 0);
-   
-   
-       }
-   
-       for (let particle of moveableArray) {
-           particle.move(1 / 100);
-           particle.draw();
-   
-       }
-   
-   }
-   
-    */
-    /* function drawCloud(_position: Vector, _size: Vector): void {
-        console.log("Cloud", _position, _size);
-
-        let nParticles: number = 25;
-        let radiusParticle: number = 20;
-        let particle: Path2D = new Path2D();
-        let gradient: CanvasGradient = crc.createRadialGradient(0, 0, 0, 0, 0, radiusParticle);
-
-        particle.arc(0, 0, radiusParticle, 0, 2 * Math.PI);
-        gradient.addColorStop(0, "HSLA(0, 100%, 100%, 0.8)");
-        gradient.addColorStop(1, "HSLA(0, 100%, 100%, 0.1)");
-
-        crc.save();
-        crc.translate(_position.x, _position.y);
-        crc.fillStyle = gradient;
-
-        for (let drawn: number = 0; drawn < nParticles; drawn++) {
-            crc.save();
-            let x: number = (Math.random() - 0.5) * _size.x;
-            let y: number = - (Math.random() * _size.y);
-            crc.translate(x, y);
-            crc.fill(particle);
-            crc.restore();
-        }
-        crc.restore();
-    } */
     function setBackground(selectedBackgroudNumber) {
         selectedBackground = selectedBackgroudNumber;
     }
@@ -180,7 +138,6 @@ var zauberbild;
         console.log(_event.clientY + "....." + zauberbild.crc.canvas.offsetTop);
         let position = mapClientToCanvas(_event.clientX, _event.clientY);
         if (selectedSymbol) { //selectedSymbol darf nicht undefiend sein 
-            // crc.putImageData(backgroundImage, 0, 0);
             selectedSymbol.setPosition(position.x, position.y);
             symbolArray.push(selectedSymbol);
             loadPicture();
@@ -217,6 +174,8 @@ var zauberbild;
     function update() {
         zauberbild.crc.resetTransform();
         canvas = document.getElementById("canvasMain");
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
         if (!canvas)
             return;
         zauberbild.crc = canvas.getContext("2d");
@@ -227,13 +186,6 @@ var zauberbild;
         if (selectedSymbol != null) {
             selectedSymbol.draw();
         }
-    }
-    function saveBackground(selectedCrc) {
-        console.log("auswählen");
-        //backgroundImage = selectedCrc.getImageData(0, 0,crc.canvas.width,crc.canvas.height);
-        loadPicture();
-        console.log("teeeeest");
-        console.log(backgroundImage);
     }
     function drawBackground() {
         if (selectedBackground == 1) {
@@ -302,13 +254,8 @@ var zauberbild;
         picture.setName(pictureName);
         picture.setBackgroundNumber(selectedBackground);
         picture.setSymbolArry(symbolArray);
-        pictureJson = JSON.stringify(picture);
-        console.log(pictureJson);
-        var request = {
-            name: picture.getName(),
-            picture: picture
-        };
-        sendData(request);
+        sendData(picture);
+        getDataFromServer();
     }
     function parseAsPicture(json) {
         console.log("parse");
@@ -326,14 +273,17 @@ var zauberbild;
             else if (symbol.name == "circle") {
                 symbolForArray = Object.assign(new zauberbild.Circle, symbol);
             }
-            else if (symbol.name == "virus") {
-                symbolForArray = Object.assign(new zauberbild.Virus, symbol);
+            else if (symbol.name == "ball") {
+                symbolForArray = Object.assign(new zauberbild.Ball, symbol);
             }
             else if (symbol.name == "cloud") {
                 symbolForArray = Object.assign(new zauberbild.Cloud, symbol);
             }
             else if (symbol.name == "classicStar") {
                 symbolForArray = Object.assign(new zauberbild.ClassicStar, symbol);
+            }
+            else if (symbol.name == "bigStar") {
+                symbolForArray = Object.assign(new zauberbild.BigStar, symbol);
             }
             else if (symbol.name == "triangle") {
                 symbolForArray = Object.assign(new zauberbild.Triangle, symbol);
@@ -345,43 +295,9 @@ var zauberbild;
         }
         return returnPicture;
     }
-    function reloadPicture() {
-        console.log("reload");
-        let pictureParsed = new zauberbild.Picture();
-        pictureParsed = JSON.parse(pictureJson);
-        let picture = Object.assign(new zauberbild.Picture, pictureParsed);
-        selectedBackground = picture.getBackgroundNumber();
-        symbolArray = [];
-        for (let symbol of picture.getSymbolArray()) {
-            let symbolForArray;
-            if (symbol.name == "sun") {
-                symbolForArray = Object.assign(new zauberbild.Sun, symbol);
-            }
-            else if (symbol.name == "circle") {
-                symbolForArray = Object.assign(new zauberbild.Circle, symbol);
-            }
-            else if (symbol.name == "virus") {
-                symbolForArray = Object.assign(new zauberbild.Virus, symbol);
-            }
-            else if (symbol.name == "cloud") {
-                symbolForArray = Object.assign(new zauberbild.Cloud, symbol);
-            }
-            else if (symbol.name == "classicStar") {
-                symbolForArray = Object.assign(new zauberbild.ClassicStar, symbol);
-            }
-            else if (symbol.name == "triangle") {
-                symbolForArray = Object.assign(new zauberbild.Triangle, symbol);
-            }
-            else {
-                continue;
-            }
-            symbolArray.push(symbolForArray);
-        }
-    }
-    async function sendData(request) {
+    async function sendData(picture) {
         console.log("Send order");
-        let query = new URLSearchParams(JSON.stringify(request.picture));
-        let response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(request.picture));
+        let response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(picture));
         let responseText = "";
         responseText = await response.text();
         alert(responseText);
@@ -390,7 +306,6 @@ var zauberbild;
         console.log("get dataaaaaaaa");
         let response = await fetch(url + "?load&");
         let responseText = await response.text();
-        alert(responseText);
         console.log("Resp: " + responseText);
         loadedPictures = [];
         let arrayFromDB = [];
@@ -404,16 +319,12 @@ var zauberbild;
         fillList();
     }
     function fillList() {
-        var str = '';
+        let str = "";
         for (let picture of loadedPictures) {
             str += '<option "id="option' + picture.name + ' "value="' + picture.name + '" />'; // Storing options in variable
         }
-        var my_list = document.getElementById("options");
-        my_list.innerHTML = str;
-        /*for (let picture of loadedPictures) {
-            let option: HTMLDataListElement = <HTMLDataListElement>document.getElementById("option" + picture.name);
-            option.addEventListener("chlick", () => { console.log("clicked" + option.nodeValue); });
-        }*/
+        let list = document.getElementById("options");
+        list.innerHTML = str;
     }
     function findPicture(name) {
         for (let picture of loadedPictures) {
@@ -430,12 +341,7 @@ var zauberbild;
         }
         selectedBackground = selectedPicture.getBackgroundNumber();
         symbolArray = selectedPicture.getSymbolArray();
+        inputField.value = selectedPicture.name;
     }
-    /*async function sendData(picture: Picture): Promise<void> {
-        console.log("Send order");
-        let response: Response = await fetch(url + "?save&" + "name :"+picture.getName());
-        let responseText: string = await response.text();
-        alert(responseText);
-    }*/
 })(zauberbild || (zauberbild = {}));
 //# sourceMappingURL=Main.js.map

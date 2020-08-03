@@ -4,12 +4,6 @@ var zauberbild;
     class Star extends zauberbild.Symbol {
         constructor(_position) {
             super(_position);
-            this.outerRadius = 80;
-            this.outerRadiusMax = 100;
-            this.outerRadiusMin = 70;
-            this.innerRadius = 25;
-            this.innerRadiusMin = 10;
-            this.innerRadiusMax = 50;
             this.isGrowing = true;
         }
         glow(_timeslice) {

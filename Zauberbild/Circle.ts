@@ -24,7 +24,7 @@ namespace zauberbild {
             crc.save();
             //crc.translate(this.position.x, this.position.y);
 
-            crc.fillStyle = "rgba(0, 0, 0)";
+            crc.fillStyle = "blue";
             circlesPath.arc(this.position.x, this.position.y, this.size, 0, 2 * Math.PI);
             // void ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
 

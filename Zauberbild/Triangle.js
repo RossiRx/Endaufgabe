@@ -4,7 +4,7 @@ var zauberbild;
     class Triangle extends zauberbild.Symbol {
         constructor(_position) {
             super(_position);
-            this.size = 80;
+            this.size = 50;
             this.name = "triangle";
             //console.log("Triangle Constructor");
         }

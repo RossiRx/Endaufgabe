@@ -1,14 +1,14 @@
 namespace zauberbild {
 
-    export class Virus extends Moveable {
+    export class Ball extends Moveable {
 
 
         public constructor(_position?: Vector) {
 
             super(_position);
-            this.name = "virus";
+            this.name = "ball";
 
-            this.size = 30;
+            this.size = 35;
 
             //console.log("Particle Constructor");
 
@@ -20,24 +20,23 @@ namespace zauberbild {
 
         public draw(): void {
 
-            //console.log("Draw Virus");
             if (this.position.x == 0 && this.position.y == 0) {
                 return;
             }
 
 
-            this.move(1 / 400);
+            this.move(1 / 100);
 
             //console.log("particle drawn" + this.position.x + this.position.y);
-            let virusPath: Path2D = new Path2D();
+            let ballPath: Path2D = new Path2D();
 
             crc.save();
             //crc.translate(this.position.x, this.position.y);
 
-            crc.fillStyle = "rgba(202, 183, 183, 1)";
-            virusPath.arc(this.position.x, this.position.y, 35, 0, 2 * Math.PI);
+            crc.fillStyle = "red";
+            ballPath.arc(this.position.x, this.position.y,  this.size, 0, 2 * Math.PI);
 
-            crc.fill(virusPath);
+            crc.fill(ballPath);
             crc.restore();
         }
     }

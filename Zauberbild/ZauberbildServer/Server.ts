@@ -14,7 +14,7 @@ export namespace zauberbild {
     if (port == undefined)
         port = 5001;
 
-   // let databaseUrl: string = "mongodb://localhost:27017";
+    // let databaseUrl: string = "mongodb://localhost:27017";
     let databaseUrl: string = "mongodb+srv://TestUser:1234@zauberbild.wwae0.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
 
@@ -37,16 +37,14 @@ export namespace zauberbild {
         console.log("Database connection ", pictures != undefined);
     }
 
-    async function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
-        console.log("What's up?");
-
+    async function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): Promise<void> {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
 
         if (_request.url) {
             let url: Url.UrlWithParsedQuery = Url.parse(_request.url, true);
 
-            let urlParts: string[] = _request.url.split('&');
+            let urlParts: string[] = _request.url.split("&");
             if (urlParts[0] == "/?save") {
 
                 for (let key in url.query) {
@@ -58,8 +56,6 @@ export namespace zauberbild {
                         storePicture(JSON.parse(jsonObj));
                     }
                 }
-                //console.log(urlParts[1]);
-                // storePicture(url.query[key]);
 
                 _response.write("save");
                 _response.end();  //nach jedem write ==> nicht am Ende, sonst wird eventuelle end() aufgerufen bevor write() fertig ist
@@ -85,11 +81,11 @@ export namespace zauberbild {
     }
 
 
-    function storePicture(_picture: any): void {
+    async function storePicture(_picture: any): Promise<void> {
         console.log("Store picture..." + _picture);
         console.log("picture: " + _picture.name);
-        pictures.deleteOne({ name: _picture.name });
-        pictures.insert(_picture);
+        await pictures.deleteOne({ name: _picture.name });
+        await pictures.insert(_picture);
     }
 
     async function loadPictures(): Promise<string> {
