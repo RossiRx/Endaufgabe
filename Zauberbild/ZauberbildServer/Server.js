@@ -3,13 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Http = require("http");
 const Url = require("url");
 const Mongo = require("mongodb");
+//mongodb+srv://TestUser:<password>@zauberbild.wwae0.mongodb.net/<dbname>?retryWrites=true&w=majority
 var zauberbild;
 (function (zauberbild) {
     let pictures;
     let port = process.env.PORT;
     if (port == undefined)
         port = 5001;
-    let databaseUrl = "mongodb://localhost:27017";
+    // let databaseUrl: string = "mongodb://localhost:27017";
+    let databaseUrl = "mongodb+srv://TestUser:1234@zauberbild.wwae0.mongodb.net/<dbname>?retryWrites=true&w=majority";
     startServer(port);
     connectToDatabase(databaseUrl);
     function startServer(_port) {

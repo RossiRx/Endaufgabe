@@ -2,6 +2,8 @@ import * as Http from "http";
 import * as Url from "url";
 import * as Mongo from "mongodb";
 
+//mongodb+srv://TestUser:<password>@zauberbild.wwae0.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 
 export namespace zauberbild {
 
@@ -12,7 +14,9 @@ export namespace zauberbild {
     if (port == undefined)
         port = 5001;
 
-    let databaseUrl: string = "mongodb://localhost:27017";
+   // let databaseUrl: string = "mongodb://localhost:27017";
+    let databaseUrl: string = "mongodb+srv://TestUser:1234@zauberbild.wwae0.mongodb.net/<dbname>?retryWrites=true&w=majority";
+
 
     startServer(port);
     connectToDatabase(databaseUrl);
