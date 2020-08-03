@@ -1,6 +1,13 @@
 namespace zauberbild {
 
+    interface ServerRequest {
+        name: string;
+        picture: Picture;
+    }
+
     window.addEventListener("load", handleLoad);
+    let loadedPictures: Picture[];
+
 
     export let crc: CanvasRenderingContext2D;
     let canvas: HTMLCanvasElement;
@@ -8,6 +15,8 @@ namespace zauberbild {
     let backgroundImage: ImageData;
     let selectedBackground: number;
     let selectedSymbol: Symbol;
+    let pictureName: string;
+    //let url: string = "https://zauberbildrossi.herokuapp.com/:54820";
     let url: string = "http://localhost:5001";
     // let savedPictures: Picture[] = [];
     let pictureJson: string;
@@ -15,6 +24,15 @@ namespace zauberbild {
     function handleLoad(): void {
         console.log("init");
 
+        renewPicture();
+        setBackgroundTools();
+        setSysmbolTools();
+
+        window.setInterval(update, 20);
+
+    }
+
+    function renewPicture():void{
         canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
             return;
@@ -23,13 +41,7 @@ namespace zauberbild {
         if (!selectedBackground) {
             selectedBackground = 1;
         }
-
-
-        setBackgroundTools();
-        setSysmbolTools();
-
-        window.setInterval(update, 20);
-
+        symbolArray = [];
     }
 
     function setBackgroundTools(): void {
@@ -99,7 +111,22 @@ namespace zauberbild {
         saveButton.addEventListener("click", savePicture);
 
         let loadButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("loadButton");
-        loadButton.addEventListener("click", reloadPicture);
+        loadButton.addEventListener("click", getDataFromServer);
+
+        let newButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("newButton");
+        newButton.addEventListener("click", renewPicture);
+
+
+        let inputField: HTMLInputElement = <HTMLInputElement>document.getElementById("nameInput");
+        inputField.addEventListener("input", () => { pictureName = inputField.value; console.log(pictureName); });
+
+        let dataList: HTMLInputElement = <HTMLInputElement>document.getElementById("pictureListInput");
+        dataList.addEventListener("input", () => {
+            console.log("listChanged");
+            changePicture(dataList.value);
+
+        });
+
     }
 
 
@@ -229,6 +256,8 @@ namespace zauberbild {
     }
 
     function loadPicture(): void {
+
+
         crc.resetTransform();
         canvas = <HTMLCanvasElement>document.getElementById("canvasMain");
         if (!canvas)
@@ -361,16 +390,73 @@ namespace zauberbild {
 
 
     function savePicture(): void {
+        if (pictureName == null || pictureName == "") {
+            console.log("picture name missing");
+            alert("Bildname fehlt!");
+
+            return;
+        }
+
         let picture: Picture;
         picture = new Picture();
-        picture.setName("teeeeeeestbild");
+        picture.setName(pictureName);
         picture.setBackgroundNumber(selectedBackground);
         picture.setSymbolArry(symbolArray);
 
         pictureJson = JSON.stringify(picture);
         console.log(pictureJson);
-        sendData(pictureJson);
 
+        var request: ServerRequest = {
+            name: picture.getName(),
+            picture: picture
+        }
+
+        sendData(request);
+
+    }
+
+    function parseAsPicture(json: any): Picture {
+        console.log("parse");
+        let returnPicture:Picture = new Picture();
+        let pictureParsed: Picture = Object.assign(new Picture, json);
+        console.log(pictureParsed.name);
+
+        returnPicture.name = pictureParsed.name;
+        returnPicture.backgroundNumber=pictureParsed.backgroundNumber;
+        returnPicture.symbolArray=[];
+
+        for (let symbol of pictureParsed.symbolArray) {
+            let symbolForArray: Symbol;
+            if (symbol.name == "sun") {
+                symbolForArray = Object.assign(new Sun, symbol);
+            }
+            else if (symbol.name == "circle") {
+                symbolForArray = Object.assign(new Circle, symbol);
+
+            }
+            else if (symbol.name == "virus") {
+                symbolForArray = Object.assign(new Virus, symbol);
+
+            }
+            else if (symbol.name == "cloud") {
+                symbolForArray = Object.assign(new Cloud, symbol);
+
+            }
+            else if (symbol.name == "classicStar") {
+                symbolForArray = Object.assign(new ClassicStar, symbol);
+
+            }
+            else if (symbol.name == "triangle") {
+                symbolForArray = Object.assign(new Triangle, symbol);
+
+            }
+            else {
+                continue;
+            }
+            returnPicture.symbolArray.push(symbolForArray);
+
+        }
+        return returnPicture;
     }
 
     function reloadPicture(): void {
@@ -416,12 +502,82 @@ namespace zauberbild {
         }
     }
 
-    async function sendData(json:string): Promise<void> {
+    async function sendData(request: ServerRequest): Promise<void> {
         console.log("Send order");
-        let response: Response = await fetch(url + "?" + json);
-        let responseText: string = await response.text();
+        let query: URLSearchParams = new URLSearchParams(JSON.stringify(request.picture));
+        let response: Response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(request.picture));
+        let responseText: string = "";
+        responseText = await response.text();
         alert(responseText);
     }
+
+    async function getDataFromServer() {
+        console.log("get dataaaaaaaa");
+        let response: Response = await fetch(url + "?load&");
+        let responseText: string = await response.text();
+        alert(responseText);
+        console.log("Resp: " + responseText);
+        loadedPictures = [];
+        let arrayFromDB: [] = [];
+        arrayFromDB = JSON.parse(responseText);
+        console.log("Array: " + arrayFromDB);
+
+
+        for (let element of arrayFromDB) {
+            console.log("vakue" + JSON.stringify(element));
+            loadedPictures.push(parseAsPicture(element));
+        }
+        console.log("Loaded pic:" + loadedPictures);
+        fillList();
+
+    }
+
+    function fillList(): void {
+        var str = '';
+        for (let picture of loadedPictures) {
+            str += '<option "id="option' + picture.name + ' "value="' + picture.name + '" />'; // Storing options in variable
+
+
+        }
+
+        var my_list = document.getElementById("options");
+        my_list.innerHTML = str;
+
+        /*for (let picture of loadedPictures) {
+            let option: HTMLDataListElement = <HTMLDataListElement>document.getElementById("option" + picture.name);
+            option.addEventListener("chlick", () => { console.log("clicked" + option.nodeValue); });
+        }*/
+
+    }
+
+    function findPicture(name: string): Picture {
+        for (let picture of loadedPictures) {
+            if (picture.name == name) {
+                return picture;
+            }
+        }
+        return null;
+
+    }
+
+    function changePicture(name: string) {
+        let selectedPicture: Picture = findPicture(name);
+        if (selectedPicture == null) {
+            return;
+        }
+
+        selectedBackground = selectedPicture.getBackgroundNumber();
+        symbolArray = selectedPicture.getSymbolArray();
+
+
+    }
+
+    /*async function sendData(picture: Picture): Promise<void> {
+        console.log("Send order");
+        let response: Response = await fetch(url + "?save&" + "name :"+picture.getName());
+        let responseText: string = await response.text();
+        alert(responseText);
+    }*/
 
 
 

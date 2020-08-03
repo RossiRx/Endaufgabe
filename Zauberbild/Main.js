@@ -2,16 +2,25 @@
 var zauberbild;
 (function (zauberbild) {
     window.addEventListener("load", handleLoad);
+    let loadedPictures;
     let canvas;
     let symbolArray = [];
     let backgroundImage;
     let selectedBackground;
     let selectedSymbol;
+    let pictureName;
+    //let url: string = "https://zauberbildrossi.herokuapp.com/:54820";
     let url = "http://localhost:5001";
     // let savedPictures: Picture[] = [];
     let pictureJson;
     function handleLoad() {
         console.log("init");
+        renewPicture();
+        setBackgroundTools();
+        setSysmbolTools();
+        window.setInterval(update, 20);
+    }
+    function renewPicture() {
         canvas = document.getElementById("canvasMain");
         if (!canvas)
             return;
@@ -20,9 +29,7 @@ var zauberbild;
         if (!selectedBackground) {
             selectedBackground = 1;
         }
-        setBackgroundTools();
-        setSysmbolTools();
-        window.setInterval(update, 20);
+        symbolArray = [];
     }
     function setBackgroundTools() {
         let crc1;
@@ -74,7 +81,16 @@ var zauberbild;
         let saveButton = document.getElementById("saveButton");
         saveButton.addEventListener("click", savePicture);
         let loadButton = document.getElementById("loadButton");
-        loadButton.addEventListener("click", reloadPicture);
+        loadButton.addEventListener("click", getDataFromServer);
+        let newButton = document.getElementById("newButton");
+        newButton.addEventListener("click", renewPicture);
+        let inputField = document.getElementById("nameInput");
+        inputField.addEventListener("input", () => { pictureName = inputField.value; console.log(pictureName); });
+        let dataList = document.getElementById("pictureListInput");
+        dataList.addEventListener("input", () => {
+            console.log("listChanged");
+            changePicture(dataList.value);
+        });
     }
     function chooseCircle() {
         handleChoose(new zauberbild.Circle());
@@ -276,14 +292,58 @@ var zauberbild;
         _crc.fillRect(0, 0, _canvas.width, _canvas.height);
     }
     function savePicture() {
+        if (pictureName == null || pictureName == "") {
+            console.log("picture name missing");
+            alert("Bildname fehlt!");
+            return;
+        }
         let picture;
         picture = new zauberbild.Picture();
-        picture.setName("teeeeeeestbild");
+        picture.setName(pictureName);
         picture.setBackgroundNumber(selectedBackground);
         picture.setSymbolArry(symbolArray);
         pictureJson = JSON.stringify(picture);
         console.log(pictureJson);
-        sendData(pictureJson);
+        var request = {
+            name: picture.getName(),
+            picture: picture
+        };
+        sendData(request);
+    }
+    function parseAsPicture(json) {
+        console.log("parse");
+        let returnPicture = new zauberbild.Picture();
+        let pictureParsed = Object.assign(new zauberbild.Picture, json);
+        console.log(pictureParsed.name);
+        returnPicture.name = pictureParsed.name;
+        returnPicture.backgroundNumber = pictureParsed.backgroundNumber;
+        returnPicture.symbolArray = [];
+        for (let symbol of pictureParsed.symbolArray) {
+            let symbolForArray;
+            if (symbol.name == "sun") {
+                symbolForArray = Object.assign(new zauberbild.Sun, symbol);
+            }
+            else if (symbol.name == "circle") {
+                symbolForArray = Object.assign(new zauberbild.Circle, symbol);
+            }
+            else if (symbol.name == "virus") {
+                symbolForArray = Object.assign(new zauberbild.Virus, symbol);
+            }
+            else if (symbol.name == "cloud") {
+                symbolForArray = Object.assign(new zauberbild.Cloud, symbol);
+            }
+            else if (symbol.name == "classicStar") {
+                symbolForArray = Object.assign(new zauberbild.ClassicStar, symbol);
+            }
+            else if (symbol.name == "triangle") {
+                symbolForArray = Object.assign(new zauberbild.Triangle, symbol);
+            }
+            else {
+                continue;
+            }
+            returnPicture.symbolArray.push(symbolForArray);
+        }
+        return returnPicture;
     }
     function reloadPicture() {
         console.log("reload");
@@ -318,11 +378,64 @@ var zauberbild;
             symbolArray.push(symbolForArray);
         }
     }
-    async function sendData(json) {
+    async function sendData(request) {
         console.log("Send order");
-        let response = await fetch(url + "?" + json);
-        let responseText = await response.text();
+        let query = new URLSearchParams(JSON.stringify(request.picture));
+        let response = await fetch(url + "?save&" + "picture" + "=" + JSON.stringify(request.picture));
+        let responseText = "";
+        responseText = await response.text();
         alert(responseText);
     }
+    async function getDataFromServer() {
+        console.log("get dataaaaaaaa");
+        let response = await fetch(url + "?load&");
+        let responseText = await response.text();
+        alert(responseText);
+        console.log("Resp: " + responseText);
+        loadedPictures = [];
+        let arrayFromDB = [];
+        arrayFromDB = JSON.parse(responseText);
+        console.log("Array: " + arrayFromDB);
+        for (let element of arrayFromDB) {
+            console.log("vakue" + JSON.stringify(element));
+            loadedPictures.push(parseAsPicture(element));
+        }
+        console.log("Loaded pic:" + loadedPictures);
+        fillList();
+    }
+    function fillList() {
+        var str = '';
+        for (let picture of loadedPictures) {
+            str += '<option "id="option' + picture.name + ' "value="' + picture.name + '" />'; // Storing options in variable
+        }
+        var my_list = document.getElementById("options");
+        my_list.innerHTML = str;
+        /*for (let picture of loadedPictures) {
+            let option: HTMLDataListElement = <HTMLDataListElement>document.getElementById("option" + picture.name);
+            option.addEventListener("chlick", () => { console.log("clicked" + option.nodeValue); });
+        }*/
+    }
+    function findPicture(name) {
+        for (let picture of loadedPictures) {
+            if (picture.name == name) {
+                return picture;
+            }
+        }
+        return null;
+    }
+    function changePicture(name) {
+        let selectedPicture = findPicture(name);
+        if (selectedPicture == null) {
+            return;
+        }
+        selectedBackground = selectedPicture.getBackgroundNumber();
+        symbolArray = selectedPicture.getSymbolArray();
+    }
+    /*async function sendData(picture: Picture): Promise<void> {
+        console.log("Send order");
+        let response: Response = await fetch(url + "?save&" + "name :"+picture.getName());
+        let responseText: string = await response.text();
+        alert(responseText);
+    }*/
 })(zauberbild || (zauberbild = {}));
 //# sourceMappingURL=Main.js.map

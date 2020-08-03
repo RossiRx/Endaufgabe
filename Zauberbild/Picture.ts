@@ -2,9 +2,9 @@ namespace zauberbild {
 
     export class Picture {
 
-        private name: string;
-        private backgroundNumber: number;
-        private symbolArray: Symbol[] = [];
+        public name: string;
+        public backgroundNumber: number;
+        public symbolArray: Symbol[] = [];
 
         public constructor() {
         }
