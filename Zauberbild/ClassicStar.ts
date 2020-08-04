@@ -9,8 +9,6 @@ namespace zauberbild {
             this.name = "classicStar";
             this.size = 25;
             this.outerRadius = 20;
-      /*       this.outerRadiusMax = 20;
-            this.outerRadiusMin = 11; */
             this.innerRadius = 5;
             this.innerRadiusMin = 3;
             this.innerRadiusMax = 10;
@@ -18,8 +16,7 @@ namespace zauberbild {
             //console.log("Particle Constructor");
 
             this.position = new Vector(0, 0);
-            /*  this.velocity = new Vector(0, 0);
-             this.velocity.random(100, 170); */  //Zufällige Geschwindigkeit mit angegebenem Min- und Maxwert
+            
         }
 
 
@@ -81,9 +78,6 @@ namespace zauberbild {
 
     }
 
-    /*    drawStar(75, 100, 5, 30, 15);
-       drawStar(175, 100, 12, 30, 10);
-       drawStar(75, 200, 6, 30, 15);
-       drawStar(175, 200, 20, 30, 25); */
+    
 }
 

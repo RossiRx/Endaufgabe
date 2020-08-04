@@ -28,7 +28,7 @@ namespace zauberbild {
 
         renewPicture();
         setBackgroundTools();
-        setSysmbolTools();
+        setDrawingTools();
 
         window.setInterval(update, 20);
 
@@ -84,7 +84,7 @@ namespace zauberbild {
         canvas4.addEventListener("click", () => setBackground(4));
 
     }
-    function setSysmbolTools(): void {
+    function setDrawingTools(): void {
 
         let button: HTMLButtonElement = <HTMLButtonElement>document.getElementById("button1");
         button.addEventListener("click", chooseCircle);
@@ -186,13 +186,14 @@ namespace zauberbild {
     }
 
     function handlePlace(_event: MouseEvent): void {
-        console.log(_event.clientX + "..." + crc.canvas.offsetLeft);
-        console.log(_event.clientY + "....." + crc.canvas.offsetTop);
+        //console.log(_event.clientX + "..." + crc.canvas.offsetLeft);
+        //console.log(_event.clientY + "....." + crc.canvas.offsetTop);
         let position: Vector = mapClientToCanvas(_event.clientX, _event.clientY);
 
         if (selectedSymbol) {     //selectedSymbol darf nicht undefiend sein 
 
             selectedSymbol.setPosition(position.x, position.y);
+            
             symbolArray.push(selectedSymbol);
             loadPicture();
         }
@@ -351,6 +352,7 @@ namespace zauberbild {
         picture.setName(pictureName);
         picture.setBackgroundNumber(selectedBackground);
         picture.setSymbolArry(symbolArray);
+
 
         sendData(picture);
         getDataFromServer();

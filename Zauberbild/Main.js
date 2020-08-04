@@ -19,7 +19,7 @@ var zauberbild;
         console.log("init");
         renewPicture();
         setBackgroundTools();
-        setSysmbolTools();
+        setDrawingTools();
         window.setInterval(update, 20);
     }
     function renewPicture() {
@@ -65,7 +65,7 @@ var zauberbild;
         drawBackground4(canvas4, crc4);
         canvas4.addEventListener("click", () => setBackground(4));
     }
-    function setSysmbolTools() {
+    function setDrawingTools() {
         let button = document.getElementById("button1");
         button.addEventListener("click", chooseCircle);
         let button2 = document.getElementById("button2");
@@ -134,8 +134,8 @@ var zauberbild;
         selectedBackground = selectedBackgroudNumber;
     }
     function handlePlace(_event) {
-        console.log(_event.clientX + "..." + zauberbild.crc.canvas.offsetLeft);
-        console.log(_event.clientY + "....." + zauberbild.crc.canvas.offsetTop);
+        //console.log(_event.clientX + "..." + crc.canvas.offsetLeft);
+        //console.log(_event.clientY + "....." + crc.canvas.offsetTop);
         let position = mapClientToCanvas(_event.clientX, _event.clientY);
         if (selectedSymbol) { //selectedSymbol darf nicht undefiend sein 
             selectedSymbol.setPosition(position.x, position.y);

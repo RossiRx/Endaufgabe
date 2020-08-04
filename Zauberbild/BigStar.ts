@@ -8,12 +8,10 @@ namespace zauberbild {
             super(_position);
             this.name = "bigStar";
             this.size = 65;
-             this.outerRadius = 50;
-  /*            this.outerRadiusMax = 100;
-             this.outerRadiusMin = 70; */
-             this.innerRadius = 15;
-             this.innerRadiusMin = 10;
-             this.innerRadiusMax = 30;
+            this.outerRadius = 50;
+            this.innerRadius = 15;
+            this.innerRadiusMin = 10;
+            this.innerRadiusMax = 30;
 
             //console.log("Particle Constructor");
 
@@ -81,9 +79,6 @@ namespace zauberbild {
 
     }
 
-    /*    drawStar(75, 100, 5, 30, 15);
-       drawStar(175, 100, 12, 30, 10);
-       drawStar(75, 200, 6, 30, 15);
-       drawStar(175, 200, 20, 30, 25); */
+  
 }
 
